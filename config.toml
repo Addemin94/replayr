@@ -1,0 +1,5 @@
+address = "127.0.0.1"
+port = "8080"
+initial_payload = ""
+initial_payload_type = "Hex"
+protocol = "Udp"
