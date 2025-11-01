@@ -79,6 +79,8 @@ pub struct SessionData {
     pub replay_payloads: Vec<ReplayablePayload>,
     pub last_packet_time: Option<std::time::Instant>,
     pub input_placeholder: String,
+    pub initial_payload: String,
+    pub initial_payload_type: PayloadType,
 }
 
 /// Holds the state of a replay session window, including logs, payloads, and progress tracking.

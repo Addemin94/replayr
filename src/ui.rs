@@ -311,6 +311,8 @@ pub fn update_app(state: &mut App, message: Message) -> Task<Message> {
                         replay_payloads: Vec::new(),
                         last_packet_time: None,
                         input_placeholder: "68656c6c6f20776f726c64".into(),
+                        initial_payload: state.last_payload.clone(),
+                        initial_payload_type: state.config.initial_payload_type,
                     }),
                 },
             );
@@ -500,9 +502,17 @@ pub fn update_app(state: &mut App, message: Message) -> Task<Message> {
         Message::ExportSession(id) => {
             if let Some(window_data) = state.windows.get(&id) {
                 if let WindowState::Session(data) = &window_data.state {
+                    let mut payloads = data.replay_payloads.clone();
+                    if !data.initial_payload.is_empty() {
+                        payloads.insert(0, crate::types::ReplayablePayload {
+                            payload: data.initial_payload.clone(),
+                            payload_type: data.initial_payload_type,
+                            delay: 0,
+                        });
+                    }
                     let replay = crate::types::ReplayableSession {
                         protocol: data.protocol,
-                        payloads: data.replay_payloads.clone(),
+                        payloads,
                     };
                     let title = window_data.title.clone();
                     Task::perform(
